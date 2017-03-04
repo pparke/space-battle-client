@@ -35,20 +35,21 @@ class SpaceBattles {
     this.projectiles = [];
 
     const player = new Player('../assets/ship/ship2.png');
+    player.health = 100;
     player.size = { x: 84, y: 84 };
     player.position = { x: (this.canvas.width / 2) - (player.size.x / 2), y: this.canvas.height - 84 }
 
     const boss = new Boss();
+    boss.health = 100;
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
-
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
     this.entities.push(boss);
 
     this.player = player;
-
 
     // Load game sounds
     this.sounds = {
@@ -84,7 +85,6 @@ class SpaceBattles {
     this.boss.updateImgSrc(b64);
     const { width, height } = this.canvas;
     const xpos = width - (data.position.x * width);
-    console.log('y pos', data.position.y)
     const ypos = data.position.y > this.boss.minHeight ? this.boss.minHeight * height : data.position.y * height;
     this.boss.updatePos(xpos, ypos);
   }
@@ -163,6 +163,9 @@ class SpaceBattles {
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
+        if(this.boss.health > 5){
+          this.boss.health -= 5;
+        }
       }
     });
 
@@ -191,12 +194,41 @@ class SpaceBattles {
    * Render
    */
   render() {
+
+    // Render Background
     this.context.beginPath();
     this.context.rect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = "black";
     this.context.fill();
+
+    // Render Entities
     this.entities.map(entity => entity.render(this.context));
+
+    // Render Projecties
     this.projectiles.map(projectile => projectile.render(this.context));
+
+    // Render player health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      this.canvas.height - this.player.health - 12,
+      24,
+      this.player.health
+    );
+    this.context.fillStyle = (this.player.health > 50) ? "green" : (this.player.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
+    // Render boss health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      12,
+      24,
+      this.boss.health
+    );
+    this.context.fillStyle = (this.boss.health > 50) ? "green" : (this.boss.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
   }
 
 }
