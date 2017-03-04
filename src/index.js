@@ -46,6 +46,8 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
+    this.bossProjectiles = [];
+
     const player = new Player('../assets/ship/ship2.png');
     player.health = 100;
     player.size = { x: 84, y: 84 };
@@ -78,7 +80,17 @@ class SpaceBattles {
 
     this.pressed = false;
     this.shotCount = 0;
+    this.bossShotCount = 0;
 
+    this.BossLastFramePos = boss.position.y;
+    this.BossCurrentFramePos = boss.position.y;
+
+    this.BossBoundaryX1;
+    this.BossBoundaryY1;
+    this.BossBoundaryX2;
+    this.BossBoundaryY2;
+
+    this.BossLaserActive = false;
 }
 
   setupSocketListener(socket) {
@@ -130,6 +142,7 @@ class SpaceBattles {
    * Update
    */
   update(timeMod) {
+    this.BossCurrentFramePos = this.boss.position.y;
 
     this.background.offset += timeMod * this.background.direction;
 
@@ -196,10 +209,71 @@ class SpaceBattles {
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);
+        console.log("played bullet CLEARED");
         this.shotCount--;
       }
-  }
+      else if (this.isColliding(this.boss, this.projectiles[i])){
+        this.projectiles.splice(i, 1);
+        this.boss.health -= 5;
+        this.shotCount--;
+        console.log("Boss Hit");
+      }
+     }
+
+     if(this.boss.health == 0){
+       this.projectiles = [];
+       alert("The Boss Is Dead")
+      window.location.reload();
+     }
+
+
+     //boss is lasering
+     if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
+        BossLaserActive = true;
+        BossBoundaryX = 0;
+        BossBoundaryY = 0;
+        //save boss pos x/y
+     }
+    //boss
+    //  if(){
+    //  }
+
+    for(let i = 0; i < this.bossProjectiles.length; i++){
+      if(this.bossProjectiles[i].position.y < 0){
+        const index = this.bossProjectiles[i];
+        this.bossProjectiles.splice(index, 1);
+        this.bossShotCount--;
+        console.log("Boss bullet CLEARED");
+      }
+      else if (this.isColliding(this.player, this.bossProjectiles[i])){
+        this.bossProjectiles.splice(i, 1);
+        this.player.health -= 5;
+        this.bossShotCount--;
+        console.log("Player Hit");
+      }
+    }
+
+    if(this.player.health == 0){
+      if (confirm("The Player Has Died")){
+        window.location.reload();
+       }
+    }
+    this.BossLastFramePos = this.boss.position.y;
 }
+
+isColliding(entityHit, projectile){
+  if  (projectile.position.y >= entityHit.position.y
+       && projectile.position.y <= entityHit.position.y + entityHit.size.y
+       && projectile.position.x >= entityHit.position.x
+       && projectile.position.x <= entityHit.position.x + entityHit.size.x ){
+             
+              return true;
+            }
+            else{
+              return false
+            }
+}
+
 
   /**
    * Render
