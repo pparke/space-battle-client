@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import InlineWorker from 'inline-worker';
 import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
@@ -13,9 +12,12 @@ class SpaceBattles {
 
     // Listen for frame data from the server and handle it.
     const socket = io('http://localhost:3090');
-    socket.on('frame', (data) => {
-      console.log('got data from server: ', data);
-    });
+
+    this.handleSocketData = this.handleSocketData.bind(this);
+    this.convertToB64 = this.convertToB64.bind(this);
+    this.animate = this.animate.bind(this);
+    this.loop = this.loop.bind(this);
+    this.setupSocketListener = this.setupSocketListener.bind(this);
 
     // Grab canvas element from the dom to render to.
     this.canvas = document.getElementById('gameCanvas');
@@ -33,14 +35,39 @@ class SpaceBattles {
 
     const boss = new Boss();
     boss.size = { x: 128, y: 128 };
-    boss.position = { x: this.canvas.width / 2, y: 42 }
+    boss.position = { x: this.canvas.width / 2, y: 42 };
+
+    this.boss = boss;
 
     this.entities.push(player);
     this.entities.push(boss);
 
     // Start the game loop.
     this.animate();
+    this.setupSocketListener(socket);
+  }
 
+  setupSocketListener(socket) {
+    /**
+     * data = {
+     * buffer: Buffer
+     * position: { x, y }
+     * size: { width, height }
+     * }
+     */
+    socket.on('frame', this.handleSocketData);
+  }
+
+  handleSocketData(data) {
+    console.log('got data from server: ', data);
+    const b64 = this.convertToB64(data.buffer);
+    this.boss.updateImgSrc(b64);
+  }
+
+  convertToB64(buf) {
+    const uint8Arr = new Uint8ClampedArray(buf);
+    const str = String.fromCharCode.apply(null, uint8Arr);
+    return btoa(str);
   }
 
   /**
@@ -87,7 +114,6 @@ class SpaceBattles {
       else if (entity.position.y + entity.size.y > this.canvas.height) {
         entity.position.y = this.canvas.height - entity.size.y;
       }
-
 
     });
 
