@@ -2,13 +2,18 @@ export default class Entity {
 
   constructor(imgSource) {
     this.sprite = new Image();
-    this.sprite.src = imgSource;
-    this.sprite.onload = function() {
+
+    this.sprite.src = imgSource || '';
+    this.sprite.onload = () => {
       this.sprite.hasLoaded = true;
-    }
-    this.size = {x: 0, y: 0};
-    this.position = {x: 0, y: 0};
+    };
+
+    this.size = { x: 0, y: 0 };
+    this.position = { x: 0, y: 0 };
     this.speed = 250;
+
+    this.update = this.update.bind(this);
+    this.render = this.render.bind(this);
   }
 
   update(timeMod) {
