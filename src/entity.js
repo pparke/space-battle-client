@@ -5,6 +5,7 @@ export default class Entity {
     this.sprite.src = imgSource;
     this.size = {x: 0, y: 0};
     this.position = {x: 0, y: 0};
+    this.speed = 250;
   }
 
   update(timeMod) {

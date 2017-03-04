@@ -9,6 +9,7 @@ export default class Player extends Entity {
 
   update(timeMod) {
     super.update(...arguments);
+
     // UP - RIGHT
     if(Keyboard.keyPressed(Keyboard.KEY.UP) && Keyboard.keyPressed(Keyboard.KEY.RIGHT)){
       this.move(Math.PI/4, timeMod);
@@ -54,9 +55,8 @@ export default class Player extends Entity {
   }
 
   move(direction, timeMod) {
-    console.log('moving: ', direction);
-    this.position.x += this.position.x * Math.cos(direction) * timeMod;
-    this.position.y += this.position.y * -Math.sin(direction) * timeMod;
+    this.position.x += this.speed * Math.cos(direction) * timeMod;
+    this.position.y += this.speed * -Math.sin(direction) * timeMod;
 
   }
 

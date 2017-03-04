@@ -66,6 +66,31 @@ class SpaceBattles {
    * Update
    */
   update(timeMod) {
+
+    this.entities.forEach((entity) => {
+
+      // Check for and resolve entity edge collions on X axis
+      if(entity.position.x < 0) {
+        console.log('COLLISION DETECHTION');
+        entity.position.x = 0;
+      }
+      else if(entity.position.x + entity.size.x > this.canvas.width) {
+        console.log('COLLISION DETECHTION');
+        entity.position.x = this.canvas.width - entity.size.x;
+      }
+
+      // Check for and resolve entity edge colliions on Y axis
+      if(entity.position.y < 0) {
+        console.log('COLLISION DETECHTION');
+        entity.position.y = 0;
+      }
+      else if (entity.position.y + entity.size.y > this.canvas.height) {
+        entity.position.y = this.canvas.height - entity.size.y;
+      }
+
+
+    });
+
     this.entities.map(entity => entity.update(timeMod));
   }
 
