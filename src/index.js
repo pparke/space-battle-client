@@ -48,6 +48,16 @@ class SpaceBattles {
 
     this.player = player;
 
+
+    // Load game sounds
+    this.sounds = {
+      music: new Audio('assets/music.mp3'),
+      fire: new Audio('assets/fire.mp3')
+    };
+
+    // Play background music
+    this.sounds.music.play();
+
     // Start the game loop.
     this.animate();
     this.setupSocketListener(socket);
@@ -142,6 +152,7 @@ class SpaceBattles {
         }
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
+        this.sounds.fire.play();
       }
     });
 
