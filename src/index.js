@@ -4,6 +4,9 @@ import Boss from './boss';
 import Keyboard from './keyboard';
 import Projectile from './projectile'
 import * as effects from './effects';
+import Laser from './laser';
+
+const laser = new Laser();
 
 class SpaceBattles {
 
@@ -183,6 +186,12 @@ class SpaceBattles {
         this.pressed = false;
     }
 
+    if (/*Math.abs(this.position.y - this.lastPos) > 100 &&*/ laser.dead) {
+      console.log('firing ma lazer')
+      laser.reset(this.boss);
+      this.projectiles.push(laser);
+    }
+
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
@@ -192,6 +201,10 @@ class SpaceBattles {
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);
         this.shotCount--;
+      }
+      if (this.projectiles[i].dead) {
+        const index = this.projectiles[i];
+        this.projectiles.splice(index, 1);
       }
   }
 }

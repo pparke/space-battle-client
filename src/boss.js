@@ -5,7 +5,8 @@ export default class Boss extends Entity {
   constructor() {
     super(...arguments);
 
-    this.minHeight = 0.3;
+    this.minHeight = 0.2;
+    this.lastPos = 0;
 
     this.updateImgSrc = this.updateImgSrc.bind(this);
   }
@@ -20,6 +21,6 @@ export default class Boss extends Entity {
   }
 
   fireLaser() {
-    
+
   }
 }
