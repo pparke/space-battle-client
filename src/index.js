@@ -3,6 +3,7 @@ import InlineWorker from 'inline-worker';
 import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
+import Projectile from './projectile';
 
 class SpaceBattles {
 
@@ -12,10 +13,10 @@ class SpaceBattles {
   constructor() {
 
     // Listen for frame data from the server and handle it.
-    const socket = io('http://localhost:3090');
+    /*const socket = io('http://localhost:3090');
     socket.on('frame', (data) => {
       console.log('got data from server: ', data);
-    });
+    });*/
 
     // Grab canvas element from the dom to render to.
     this.canvas = document.getElementById('gameCanvas');
@@ -30,7 +31,7 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
-    const player = new Player();
+    const player = new Player('../assets/ship.png');
     player.size = { x: 32, y: 32 };
     player.position = { x: this.canvas.width / 2, y: this.canvas.height - 48 }
 
@@ -104,7 +105,7 @@ class SpaceBattles {
       }
 
       // Fire projectile if player is shooting.
-      if(Keyboard.keyPressed(Keyboard.KEY.DOWN)){
+      if(Keyboard.keyPressed(Keyboard.KEY.SPACE)){
         const projectile = new Projectile();
         projectile.position = {
           x: this.player.position.x + (this.player.size.x / 2),
