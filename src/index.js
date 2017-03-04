@@ -68,7 +68,8 @@ class SpaceBattles {
     console.log('got data from server: ', data);
     const b64 = this.convertToB64(data.buffer);
     this.boss.updateImgSrc(b64);
-    this.boss.updatePos(data.position);
+    const { width, height } = this.canvas;
+    this.boss.updatePos(width - (data.position.x * width), data.position.y * height);
   }
 
   convertToB64(buf) {

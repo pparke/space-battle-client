@@ -12,7 +12,9 @@ export default class Boss extends Entity {
     this.sprite.src = 'data:image/png;base64,' + base64String;
   }
 
-  updatePos(pos) {
-    this.position = pos;
+  updatePos(x, y) {
+    console.log('setting position to', x, y)
+    this.position.x = x;
+    this.position.y = y;
   }
 }

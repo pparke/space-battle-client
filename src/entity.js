@@ -6,8 +6,8 @@ export default class Entity {
     this.sprite.src = imgSource || '';
     this.sprite.onload = () => {
       this.sprite.hasLoaded = true;
-    }
-    
+    };
+
     this.size = { x: 0, y: 0 };
     this.position = { x: 0, y: 0 };
     this.speed = 250;
