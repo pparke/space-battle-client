@@ -3,6 +3,7 @@ import InlineWorker from 'inline-worker';
 import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
+import Projectile from './projectile'
 
 class SpaceBattles {
 
@@ -21,7 +22,7 @@ class SpaceBattles {
     this.canvas = document.getElementById('gameCanvas');
     this.context = this.canvas.getContext('2d');
 
-    // Set initial last frame time
+    // Set initial last frame timee
     this.lastFrameTime = Date.now();
 
     // Setup entities
@@ -118,7 +119,13 @@ class SpaceBattles {
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
-
+    
+    for(let i = 0; i < this.projectiles.size; i++){
+      if(this.projectiles[i].position.y > this.canvas.length){
+        this.projectiles.remove(this.projectiles.indexof(pProjectile));
+      }
+    }
+    console.log(this.projectiles.length);
   }
 
   /**
