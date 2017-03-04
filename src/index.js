@@ -3,7 +3,7 @@ import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
 import Projectile from './projectile'
-
+import * as effects from './effects';
 
 class SpaceBattles {
 
@@ -34,11 +34,13 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
-    const player = new Player('../assets/ship/ship2.png', this.context);
+    const player = new Player('../assets/ship/ship2.png');
+    player.health = 100;
     player.size = { x: 84, y: 84 };
     player.position = { x: (this.canvas.width / 2) - (player.size.x / 2), y: this.canvas.height - 84 }
 
-    const boss = new Boss('', this.context);
+    const boss = new Boss();
+    boss.health = 100;
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
     boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
@@ -61,7 +63,11 @@ class SpaceBattles {
     // Start the game loop.
     this.animate();
     this.setupSocketListener(socket);
-  }
+
+    this.pressed = false;
+    this.shotCount = 0;
+
+}
 
   setupSocketListener(socket) {
     /**
@@ -145,8 +151,9 @@ class SpaceBattles {
       }
 
       // Fire projectile if player is shooting.
-      if(Keyboard.keyPressed(Keyboard.KEY.SPACE)){
-        this.player.flash()
+      if(Keyboard.keyPressed(Keyboard.KEY.SPACE) && !this.pressed){
+        this.shotCount++;
+        this.pressed = true;
         const projectile = new Projectile();
         projectile.position = {
           x: this.player.position.x + (this.player.size.x / 2),
@@ -155,29 +162,68 @@ class SpaceBattles {
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
+        if(this.boss.health > 5){
+          this.boss.health -= 5;
+        }
       }
     });
+
+    if(!Keyboard.keyPressed(Keyboard.KEY.SPACE) && this.pressed){
+        this.pressed = false;
+    }
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
-    for(let i = 0; i < this.projectiles.size; i++){
-      if(this.projectiles[i].position.y > this.canvas.length){
-        this.projectiles.remove(this.projectiles.indexof(pProjectile));
+
+    for(let i = 0; i < this.projectiles.length; i++){
+      if(this.projectiles[i].position.y < 0){
+        const index = this.projectiles[i];
+        this.projectiles.splice(index, 1);
+        this.shotCount--;
       }
-    }
   }
+}
 
   /**
    * Render
    */
   render() {
+
+    // Render Background
     this.context.beginPath();
     this.context.rect(0, 0, this.canvas.width, this.canvas.height);
     this.context.fillStyle = "black";
     this.context.fill();
+
+    // Render Entities
     this.entities.map(entity => entity.render(this.context));
+
+    // Render Projecties
     this.projectiles.map(projectile => projectile.render(this.context));
+
+    // Render player health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      this.canvas.height - this.player.health - 12,
+      24,
+      this.player.health
+    );
+    this.context.fillStyle = (this.player.health > 50) ? "green" : (this.player.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
+    // Render boss health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      12,
+      24,
+      this.boss.health
+    );
+    this.context.fillStyle = (this.boss.health > 50) ? "green" : (this.boss.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
   }
 
 }
