@@ -85,13 +85,6 @@ class SpaceBattles {
 
     this.BossLastFramePos = boss.position.y;
     this.BossCurrentFramePos = boss.position.y;
-
-    this.BossBoundaryX1;
-    this.BossBoundaryY1;
-    this.BossBoundaryX2;
-    this.BossBoundaryY2;
-
-    this.BossLaserActive = false;
 }
 
   setupSocketListener(socket) {
@@ -230,10 +223,7 @@ class SpaceBattles {
 
      //boss is lasering
      if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
-        BossLaserActive = true;
-        BossBoundaryX = 0;
-        BossBoundaryY = 0;
-        //save boss pos x/y
+        
      }
     //boss
     //  if(){
