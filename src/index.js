@@ -146,6 +146,11 @@ class SpaceBattles {
         e.position.y = this.canvas.height - e.size.y;
       }
 
+      // Keep player below half height
+      if(this.player.position.y < this.canvas.height / 2) {
+        this.player.position.y = this.canvas.height / 2;
+      }
+
       // Check for and resolve player on entity collisons
       if(
         !(e instanceof Player) &&
