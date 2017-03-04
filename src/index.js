@@ -2,7 +2,8 @@ import io from 'socket.io-client';
 import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
-import Projectile from './projectile';
+import Projectile from './projectile'
+
 
 class SpaceBattles {
 
@@ -24,7 +25,7 @@ class SpaceBattles {
     this.canvas = document.getElementById('gameCanvas');
     this.context = this.canvas.getContext('2d');
 
-    // Set initial last frame time
+    // Set initial last frame timee
     this.lastFrameTime = Date.now();
 
     // Setup entities
@@ -34,20 +35,21 @@ class SpaceBattles {
     this.projectiles = [];
 
     const player = new Player('../assets/ship/ship2.png');
+    player.health = 100;
     player.size = { x: 84, y: 84 };
     player.position = { x: (this.canvas.width / 2) - (player.size.x / 2), y: this.canvas.height - 84 }
 
     const boss = new Boss();
+    boss.health = 100;
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
-
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
     this.entities.push(boss);
 
     this.player = player;
-
 
     // Load game sounds
     this.sounds = {
@@ -79,7 +81,6 @@ class SpaceBattles {
     this.boss.updateImgSrc(b64);
     const { width, height } = this.canvas;
     const xpos = width - (data.position.x * width);
-    console.log('y pos', data.position.y)
     const ypos = data.position.y > this.boss.minHeight ? this.boss.minHeight * height : data.position.y * height;
     this.boss.updatePos(xpos, ypos);
   }
@@ -155,65 +156,63 @@ class SpaceBattles {
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
+        if(this.boss.health > 5){
+          this.boss.health -= 5;
+        }
       }
     });
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
+    for(let i = 0; i < this.projectiles.size; i++){
+      if(this.projectiles[i].position.y > this.canvas.length){
+        this.projectiles.remove(this.projectiles.indexof(pProjectile));
+      }
+    }
   }
 
   /**
    * Render
    */
   render() {
+
+    // Render Background
     this.context.beginPath();
     this.context.rect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "blue";
+    this.context.fillStyle = "black";
     this.context.fill();
+
+    // Render Entities
     this.entities.map(entity => entity.render(this.context));
+
+    // Render Projecties
     this.projectiles.map(projectile => projectile.render(this.context));
+
+    // Render player health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      this.canvas.height - this.player.health - 12,
+      24,
+      this.player.health
+    );
+    this.context.fillStyle = (this.player.health > 50) ? "green" : (this.player.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
+    // Render boss health bar
+    this.context.beginPath();
+    this.context.rect(
+      this.canvas.width - 36,
+      12,
+      24,
+      this.boss.health
+    );
+    this.context.fillStyle = (this.boss.health > 50) ? "green" : (this.boss.health > 25) ? "yellow" : "red";
+    this.context.fill();
+
   }
 
 }
 
 const game = new SpaceBattles();
-
-
-/*
-const socket = io('http://localhost:3090');
-
-const canvas = document.getElementById('canvas-video');
-const { width, height } = canvas;
-const ctx = canvas.getContext('2d');
-const img = new Image();
-
-// show loading notice
-ctx.fillStyle = '#333';
-ctx.fillText('Loading...', canvas.width / 2 - 30, canvas.height / 3);
-
-socket.on('frame', (data) => {
-  // Reference: http://    const self = {};
-    const worker = new InlineWorker(function(self){
-      const socket = io('http://localhost:3090');
-      socket.on('frame', (data) => {
-        postMessage(data);
-      });
-    });stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
-/*
-  const buf = new ArrayBuffer(width * height * 4);
-  const imgArr = new Uint8ClampedArray(buf);
-  const imgData = new ImageData(imgArr, width, height);
-  ctx.putImageData(imgData, 0, 0);
-*/
-/*
-  const uint8Arr = new Uint8ClampedArray(data.buffer);
-  const str = String.fromCharCode.apply(null, uint8Arr);
-  const base64String = btoa(str);
-
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = 'data:image/png;base64,' + base64String;
-});
-*/
