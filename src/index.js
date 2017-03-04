@@ -1,12 +1,12 @@
-import io from 'socket.io-client';
-import Player from './player';
 import Boss from './boss';
+import Player from './player';
+import io from 'socket.io-client';
 import Keyboard from './keyboard';
-import Projectile from './projectile'
 import * as effects from './effects';
 import Laser from './laser';
+import Projectile from './projectile'
 
-const laser = new Laser();
+const laser = new Laser('../assets/boss/boss_laser.png');
 
 class SpaceBattles {
 
@@ -37,6 +37,11 @@ class SpaceBattles {
     this.background.onload = () => { this.background.hasLoaded = true; }
     this.background.offset = 0;
     this.background.direction = 1;
+
+    // Load project tile
+    this.projectileImage = new Image();
+    this.projectileImage.src = 'assets/ship/simple_shot2.png';
+    this.projectileImage.onload = () => { this.projectileImage.hasLoaded = true; }
 
     // Setup entities
     this.entities = [];
@@ -171,12 +176,12 @@ class SpaceBattles {
       if(Keyboard.keyPressed(Keyboard.KEY.SPACE) && !this.pressed){
         this.shotCount++;
         this.pressed = true;
-        const projectile = new Projectile();
+        const projectile = new Projectile(this.projectileImage);
+        projectile.size = { x: 24, y: 32 };
         projectile.position = {
-          x: this.player.position.x + (this.player.size.x / 2),
+          x: (this.player.position.x + this.player.size.x / 2) - projectile.size.x / 2,
           y: this.player.position.y - 12
         }
-        projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
       }
@@ -186,17 +191,19 @@ class SpaceBattles {
         this.pressed = false;
     }
 
-    if (/*Math.abs(this.position.y - this.lastPos) > 100 &&*/ laser.dead) {
+    if (Math.abs(this.boss.position.y - this.boss.lastPos.y) > 50 && laser.dead) {
       console.log('firing ma lazer')
       laser.reset(this.boss);
       this.projectiles.push(laser);
+    }
+    if (Math.abs(this.boss.position.x - this.boss.lastPos.x) > 300 && !laser.dead) {
+      laser.dead = true;
     }
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
-
-    for(let i = 0; i < this.projectiles.length; i++){
+    for(let i = 0; i < this.projectiles.length; i++) {
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);

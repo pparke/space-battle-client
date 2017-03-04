@@ -20,7 +20,7 @@ export default class Laser extends Entity {
     if (this.dead) {
       return;
     }
-    this.position.y = this.entity.position.y;
+    this.position.y = this.entity.position.y + this.entity.size.y - 30;
     this.position.x = this.entity.position.x + this.entity.size.x/2 - this.size.x/2;
     if (this.size.y < this.maxLength) {
       this.size.y += 5;

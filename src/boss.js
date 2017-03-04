@@ -6,7 +6,7 @@ export default class Boss extends Entity {
     super(...arguments);
 
     this.minHeight = 0.2;
-    this.lastPos = 0;
+    this.lastPos = {x: 0, y: 0};
 
     this.updateImgSrc = this.updateImgSrc.bind(this);
   }
@@ -16,6 +16,8 @@ export default class Boss extends Entity {
   }
 
   updatePos(x, y) {
+    this.lastPos.y = this.position.y;
+    this.lastPos.x = this.position.x;
     this.position.x = x;
     this.position.y = y;
   }

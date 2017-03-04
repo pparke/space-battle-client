@@ -2,8 +2,9 @@ import Entity from './entity';
 
 export default class Projectile extends Entity {
 
-  constructor(positionX, positionY) {
-    super(...arguments);
+  constructor(sprite) {
+    super();
+    this.sprite = sprite;
   }
 
   update(timeMod){
