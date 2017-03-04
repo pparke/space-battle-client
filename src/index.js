@@ -58,7 +58,7 @@ class SpaceBattles {
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
     boss.angry = false;
-    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: this.boss.size.x+50, y: this.boss.size.y+50 });
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
@@ -255,7 +255,7 @@ class SpaceBattles {
     if(this.boss.health < 40 && !this.boss.angry) {
       this.boss.decorations = [];
       this.boss.angry = true;
-      this.boss.addDecoration('../assets/boss/boss_damaged.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
+      this.boss.addDecoration('../assets/boss/boss_damaged.png', { x: -25, y: -25 }, { x: this.boss.size.x+50, y: this.boss.size.y+50 });
     }
 }
 
