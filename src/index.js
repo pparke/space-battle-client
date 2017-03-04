@@ -41,14 +41,13 @@ class SpaceBattles {
     const boss = new Boss();
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
-    boss.addDecoration('assets/boss/boss.png');
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
     this.entities.push(boss);
 
     this.player = player;
-
 
     // Load game sounds
     this.sounds = {
@@ -160,13 +159,12 @@ class SpaceBattles {
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
-    
+
     for(let i = 0; i < this.projectiles.size; i++){
       if(this.projectiles[i].position.y > this.canvas.length){
         this.projectiles.remove(this.projectiles.indexof(pProjectile));
       }
     }
-    console.log(this.projectiles.length);
   }
 
   /**

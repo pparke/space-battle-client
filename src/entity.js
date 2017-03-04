@@ -18,12 +18,16 @@ export default class Entity {
     this.render = this.render.bind(this);
   }
 
-  addDecoration(src) {
-    const dec = new Image();
-    dec.onload = () => {
+  addDecoration(src, pos, size) {
+    const dec = {};
+    dec.img = new Image();
+    dec.img.onload = () => {
       dec.ready = true;
     }
-    dec.src = src;
+    dec.img.src = src;
+    dec.pos = pos;
+    dec.size = size;
+    dec.ready = false;
     this.decorations.push(dec);
   }
 
@@ -46,8 +50,8 @@ export default class Entity {
         }
         context.drawImage(
           dec.img,
-          dec.pos.x,
-          dec.pos.y,
+          this.position.x + dec.pos.x,
+          this.position.y + dec.pos.y,
           dec.size.x,
           dec.size.y
         );

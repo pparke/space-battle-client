@@ -18,4 +18,8 @@ export default class Boss extends Entity {
     this.position.x = x;
     this.position.y = y;
   }
+
+  fireLaser() {
+    
+  }
 }
