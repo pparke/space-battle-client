@@ -5,6 +5,8 @@ export default class Boss extends Entity {
   constructor() {
     super(...arguments);
 
+    this.minHeight = 0.3;
+
     this.updateImgSrc = this.updateImgSrc.bind(this);
   }
 
@@ -13,7 +15,6 @@ export default class Boss extends Entity {
   }
 
   updatePos(x, y) {
-    console.log('setting position to', x, y)
     this.position.x = x;
     this.position.y = y;
   }
