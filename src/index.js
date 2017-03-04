@@ -28,6 +28,10 @@ class SpaceBattles {
     // Set initial last frame timee
     this.lastFrameTime = Date.now();
 
+    // Load background
+    this.background = new Image();
+    this.background.src = 'assets/background/background.png';
+
     // Setup entities
     this.entities = [];
 
@@ -176,7 +180,7 @@ class SpaceBattles {
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
-    
+
     for(let i = 0; i < this.projectiles.length; i++){
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
@@ -196,10 +200,13 @@ class SpaceBattles {
   render() {
 
     // Render Background
-    this.context.beginPath();
-    this.context.rect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "black";
-    this.context.fill();
+    context.drawImage(
+      this.background,
+      0,
+      0,
+      this.canvas.width,
+      this.canvas.height
+    );
 
     // Render Entities
     this.entities.map(entity => entity.render(this.context));
