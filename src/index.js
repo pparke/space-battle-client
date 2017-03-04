@@ -79,6 +79,14 @@ class SpaceBattles {
 
     this.BossLastFramePos = boss.position.y;
     this.BossCurrentFramePos = boss.position.y;
+
+    this.BossBoundaryX1;
+    this.BossBoundaryY1;
+    this.BossBoundaryX2;
+    this.BossBoundaryY2;
+    
+
+    this.BossLaserActive = false;
 }
 
   setupSocketListener(socket) {
@@ -210,15 +218,23 @@ class SpaceBattles {
 
      if(this.boss.health == 0){
        this.projectiles = [];
-       if (confirm("The Boss Is Dead")){
-        window.location.reload();
-       }
+       alert("The Boss Is Dead")
+      window.location.reload();
      }
+
 
      //boss is lasering
      if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
-
+        BossLaserActive = true;
+        BossBoundaryX = 0;
+        BossBoundaryY = 0;
+        //save boss pos x/y
      }
+    
+    //boss
+    //  if(){
+       
+    //  }
 
     for(let i = 0; i < this.bossProjectiles.length; i++){
       if(this.bossProjectiles[i].position.y < 0){
@@ -236,7 +252,9 @@ class SpaceBattles {
     }
 
     if(this.player.health == 0){
-      
+      if (confirm("The Player Has Died")){
+        window.location.reload();
+       }
     }
     this.BossLastFramePos = this.boss.position.y;
 }
