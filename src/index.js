@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import InlineWorker from 'inline-worker';
 
 class SpaceBattles {
 
@@ -7,19 +8,11 @@ class SpaceBattles {
    */
   constructor() {
 
-    // Setup socket to stream image data from server.
-    const socket = io('http://localhost:3090');
-
-    // Create web worker for reading data from server.
-    const worker = new Worker('./worker.js');
-
-    // When worker gives us new data, set it on game object.
-    worker.addEventListener('message', (e) => {
-      // TODO: have the worker do the parsing of the data
-      //       but we should be storing the data here so it
-      //       is accesible in update/render
-      console.log('GOT DATA FROM WORKER: ', e.data);
-    }, false);
+    const self = {};
+    const worker = new InlineWorker(function(self){
+      // Web worker server socket logic here.
+      postMessage(/** Data from server **/);
+    });
 
     // Grab canvas element from the dom to render to.
     this.canvas = document.getElementById('gameCanvas');
@@ -38,7 +31,7 @@ class SpaceBattles {
    */
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
-    this.look();
+    this.loop();
   }
 
   /**
@@ -55,7 +48,7 @@ class SpaceBattles {
   /**
    * Update
    */
-  update() {
+  update(timeMod) {
 
   }
 
@@ -71,6 +64,7 @@ class SpaceBattles {
 const game = new SpaceBattles();
 
 
+/*
 const socket = io('http://localhost:3090');
 
 const canvas = document.getElementById('canvas-video');
@@ -90,6 +84,7 @@ socket.on('frame', (data) => {
   const imgData = new ImageData(imgArr, width, height);
   ctx.putImageData(imgData, 0, 0);
 */
+/*
   const uint8Arr = new Uint8ClampedArray(data.buffer);
   const str = String.fromCharCode.apply(null, uint8Arr);
   const base64String = btoa(str);
@@ -99,3 +94,4 @@ socket.on('frame', (data) => {
   };
   img.src = 'data:image/png;base64,' + base64String;
 });
+*/

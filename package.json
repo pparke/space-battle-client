@@ -21,6 +21,7 @@
     "webpack-dev-server": "^2.4.1"
   },
   "dependencies": {
+    "inline-worker": "^1.1.0",
     "socket.io-client": "^1.7.3"
   }
 }
