@@ -7,6 +7,7 @@ export default class Laser extends Entity {
     this.entity;
     this.maxLength = 1000;
     this.dead = true;
+    this.name = 'laser';
   }
 
   reset(entity) {

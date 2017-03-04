@@ -49,6 +49,8 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
+    this.bossProjectiles = [];
+
     const player = new Player('../assets/ship/ship2.png');
     player.health = 100;
     player.size = { x: 84, y: 84 };
@@ -58,6 +60,7 @@ class SpaceBattles {
     boss.health = 100;
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
+    boss.angry = false;
     boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
@@ -81,7 +84,10 @@ class SpaceBattles {
 
     this.pressed = false;
     this.shotCount = 0;
+    this.bossShotCount = 0;
 
+    this.BossLastFramePos = boss.position.y;
+    this.BossCurrentFramePos = boss.position.y;
 }
 
   setupSocketListener(socket) {
@@ -133,6 +139,7 @@ class SpaceBattles {
    * Update
    */
   update(timeMod) {
+    this.BossCurrentFramePos = this.boss.position.y;
 
     this.background.offset += timeMod * this.background.direction;
 
@@ -191,30 +198,101 @@ class SpaceBattles {
         this.pressed = false;
     }
 
-    if (Math.abs(this.boss.position.y - this.boss.lastPos.y) > 50 && laser.dead) {
+    if (Math.abs(this.boss.position.y - this.boss.lastPos.y) > 40 && laser.dead) {
       console.log('firing ma lazer')
       laser.reset(this.boss);
-      this.projectiles.push(laser);
+      this.bossProjectiles.push(laser);
     }
-    if (Math.abs(this.boss.position.x - this.boss.lastPos.x) > 300 && !laser.dead) {
+    if (Math.abs(this.boss.position.x - this.boss.lastPos.x) > 600 && !laser.dead) {
+      console.log('laser out of bounds')
       laser.dead = true;
     }
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
+    this.bossProjectiles.map(projectile => projectile.update(timeMod));
 
     for(let i = 0; i < this.projectiles.length; i++) {
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);
+        console.log("played bullet CLEARED");
         this.shotCount--;
       }
-      if (this.projectiles[i].dead) {
-        const index = this.projectiles[i];
-        this.projectiles.splice(index, 1);
+
+      else if (this.isColliding(this.boss, this.projectiles[i])){
+        this.projectiles.splice(i, 1);
+        this.boss.health -= 5;
+        this.shotCount--;
+        console.log("Boss Hit");
       }
-  }
+     }
+
+     if(this.boss.health == 0){
+       this.projectiles = [];
+       alert("The Boss Is Dead")
+      window.location.reload();
+     }
+
+
+     //boss is lasering
+     if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
+
+     }
+    //boss
+    //  if(){
+    //  }
+
+    for(let i = 0; i < this.bossProjectiles.length; i++){
+      if(this.bossProjectiles[i].position.y < 0){
+        const index = this.bossProjectiles[i];
+        this.bossProjectiles.splice(index, 1);
+        this.bossShotCount--;
+        console.log("Boss bullet CLEARED");
+      }
+      else if (this.isColliding(this.player, this.bossProjectiles[i])){
+        this.bossProjectiles.splice(i, 1);
+        this.player.health -= 5;
+        this.bossShotCount--;
+        console.log("Player Hit");
+      }
+      
+      if (this.bossProjectiles[i] && this.bossProjectiles[i].dead) {
+        const index = this.bossProjectiles[i];
+        this.bossProjectiles.splice(index, 1);
+        console.log('cleared lazer')
+      }
+    }
+
+    if(this.player.health == 0){
+      if (confirm("The Player Has Died")){
+        window.location.reload();
+       }
+    }
+    this.BossLastFramePos = this.boss.position.y;
+
+    // Handle low boss health
+    if(this.boss.health < 40 && !this.boss.angry) {
+      this.boss.decorations = [];
+      this.boss.angry = true;
+      boss.addDecoration('../assets/boss/boss_damaged.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
+    }
 }
+
+isColliding(entityHit, projectile){
+
+  if  (projectile.position.y >= entityHit.position.y
+       && projectile.position.y <= entityHit.position.y + entityHit.size.y
+       && projectile.position.x >= entityHit.position.x
+       && projectile.position.x <= entityHit.position.x + entityHit.size.x ){
+
+              return true;
+            }
+            else{
+              return false
+            }
+}
+
 
   /**
    * Render
@@ -249,6 +327,7 @@ class SpaceBattles {
 
     // Render Projecties
     this.projectiles.map(projectile => projectile.render(this.context));
+    this.bossProjectiles.map(projectile => projectile.render(this.context));
 
     // Render player health bar
     this.context.beginPath();

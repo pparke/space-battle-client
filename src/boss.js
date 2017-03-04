@@ -16,6 +16,9 @@ export default class Boss extends Entity {
   }
 
   updatePos(x, y) {
+    if (x === 0 || y === 0) {
+      return;
+    }
     this.lastPos.y = this.position.y;
     this.lastPos.x = this.position.x;
     this.position.x = x;
