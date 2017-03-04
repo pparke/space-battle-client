@@ -1,9 +1,9 @@
-import io from 'socket.io-client';
-import Player from './player';
 import Boss from './boss';
+import Player from './player';
+import io from 'socket.io-client';
 import Keyboard from './keyboard';
-import Projectile from './projectile'
 import * as effects from './effects';
+import Projectile from './projectile'
 
 class SpaceBattles {
 
@@ -34,6 +34,11 @@ class SpaceBattles {
     this.background.onload = () => { this.background.hasLoaded = true; }
     this.background.offset = 0;
     this.background.direction = 1;
+
+    // Load project tile
+    this.projectileImage = new Image();
+    this.projectileImage.src = 'assets/ship/simple_shot2.png';
+    this.projectileImage.onload = () => { this.projectileImage.hasLoaded = true; }
 
     // Setup entities
     this.entities = [];
@@ -168,12 +173,12 @@ class SpaceBattles {
       if(Keyboard.keyPressed(Keyboard.KEY.SPACE) && !this.pressed){
         this.shotCount++;
         this.pressed = true;
-        const projectile = new Projectile();
+        const projectile = new Projectile(this.projectileImage);
+        projectile.size = { x: 24, y: 32 };
         projectile.position = {
-          x: this.player.position.x + (this.player.size.x / 2),
+          x: (this.player.position.x + this.player.size.x / 2) - projectile.size.x / 2,
           y: this.player.position.y - 12
         }
-        projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
       }
