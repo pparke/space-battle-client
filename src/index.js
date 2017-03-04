@@ -27,6 +27,9 @@ class SpaceBattles {
     // Setup entities
     this.entities = [];
 
+    // Setup projectiles
+    this.projectiles = [];
+
     const player = new Player();
     player.size = { x: 32, y: 32 };
     player.position = { x: this.canvas.width / 2, y: this.canvas.height - 48 }
@@ -100,9 +103,21 @@ class SpaceBattles {
         this.player.revertMove(timeMod);
       }
 
+      // Fire projectile if player is shooting.
+      if(Keyboard.keyPressed(Keyboard.KEY.DOWN)){
+        const projectile = new Projectile();
+        projectile.position = {
+          x: this.player.position.x + (this.player.size.x / 2),
+          y: this.player.position.y - 12
+        }
+        projectile.size = { x: 4, y: 12 };
+        this.projectiles.push(projectile);
+      }
+
     });
 
     this.entities.map(entity => entity.update(timeMod));
+    this.projectiles.map(projectile => projectile.update(timeMod));
 
   }
 
@@ -115,6 +130,7 @@ class SpaceBattles {
     this.context.fillStyle = "blue";
     this.context.fill();
     this.entities.map(entity => entity.render(this.context));
+    this.projectiles.map(projectile => projectile.render(this.context));
   }
 
 }
