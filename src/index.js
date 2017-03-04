@@ -34,6 +34,8 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
+    this.bossProjectiles = [];
+
     const player = new Player('../assets/ship/ship2.png');
     player.health = 100;
     player.size = { x: 84, y: 84 };
@@ -66,7 +68,10 @@ class SpaceBattles {
 
     this.pressed = false;
     this.shotCount = 0;
+    this.bossShotCount = 0;
 
+    this.BossLastFramePos = boss.position.y;
+    this.BossCurrentFramePos = boss.position.y;
 }
 
   setupSocketListener(socket) {
@@ -118,6 +123,7 @@ class SpaceBattles {
    * Update
    */
   update(timeMod) {
+    this.BossCurrentFramePos = this.boss.position.y;
 
     this.entities.forEach((e) => {
 
@@ -162,9 +168,6 @@ class SpaceBattles {
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
-        if(this.boss.health > 5){
-          this.boss.health -= 5;
-        }
       }
     });
 
@@ -175,15 +178,67 @@ class SpaceBattles {
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
 
-    
+
     for(let i = 0; i < this.projectiles.length; i++){
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);
+        console.log("played bullet CLEARED");
         this.shotCount--;
       }
-  }
+      else if (this.isColliding(this.boss, this.projectiles[i])){
+        this.projectiles.splice(i, 1);
+        this.boss.health -= 5;
+        this.shotCount--;
+        console.log("Boss Hit");
+      }
+     }
+
+     if(this.boss.health == 0){
+       this.projectiles = [];
+       if (confirm("The Boss Is Dead")){
+        window.location.reload();
+       }
+     }
+
+     //boss is lasering
+     if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
+
+     }
+
+    for(let i = 0; i < this.bossProjectiles.length; i++){
+      if(this.bossProjectiles[i].position.y < 0){
+        const index = this.bossProjectiles[i];
+        this.bossProjectiles.splice(index, 1);
+        this.bossShotCount--;
+        console.log("Boss bullet CLEARED");
+      }
+      else if (this.isColliding(this.player, this.bossProjectiles[i])){
+        this.bossProjectiles.splice(i, 1);
+        this.player.health -= 5;
+        this.bossShotCount--;
+        console.log("Player Hit");
+      }
+    }
+
+    if(this.player.health == 0){
+      
+    }
+    this.BossLastFramePos = this.boss.position.y;
 }
+
+isColliding(entityHit, projectile){
+  if  (projectile.position.y >= entityHit.position.y
+       && projectile.position.y <= entityHit.position.y + entityHit.size.y
+       && projectile.position.x >= entityHit.position.x
+       && projectile.position.x <= entityHit.position.x + entityHit.size.x ){
+              return true;  
+            }
+            else{
+              return false
+            }
+}
+
 
   /**
    * Render
