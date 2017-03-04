@@ -1,4 +1,4 @@
-  {
+{
   "name": "vision-client",
   "version": "1.0.0",
   "description": "",
@@ -15,6 +15,7 @@
     "babel-eslint": "^7.1.1",
     "babel-loader": "^6.3.2",
     "babel-preset-latest": "^6.22.0",
+    "copy-webpack-plugin": "^4.0.1",
     "eslint": "^3.16.1",
     "eslint-plugin-babel": "^4.1.0",
     "webpack": "^2.2.1",
