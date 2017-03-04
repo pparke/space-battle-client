@@ -43,14 +43,13 @@ class SpaceBattles {
     boss.health = 100;
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
-
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
     this.entities.push(boss);
 
     this.player = player;
-
 
     // Load game sounds
     this.sounds = {
@@ -82,7 +81,6 @@ class SpaceBattles {
     this.boss.updateImgSrc(b64);
     const { width, height } = this.canvas;
     const xpos = width - (data.position.x * width);
-    console.log('y pos', data.position.y)
     const ypos = data.position.y > this.boss.minHeight ? this.boss.minHeight * height : data.position.y * height;
     this.boss.updatePos(xpos, ypos);
   }
