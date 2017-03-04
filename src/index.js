@@ -63,7 +63,7 @@ class SpaceBattles {
    * Render
    */
   render() {
-
+    this.entities.map(entity => entity.render(this.context));
   }
 
 }

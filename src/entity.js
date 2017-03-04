@@ -6,4 +6,12 @@ export default class Entity {
     this.position = {x: 0, y: 0};
   }
 
+  update(timeMod) {
+
+  }
+
+  render() {
+
+  }
+
 }
