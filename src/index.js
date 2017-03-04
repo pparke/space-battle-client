@@ -63,6 +63,10 @@ class SpaceBattles {
     // Start the game loop.
     this.animate();
     this.setupSocketListener(socket);
+
+    pressed = false;
+    shotCount = 0;
+
   }
 
   setupSocketListener(socket) {
@@ -146,8 +150,11 @@ class SpaceBattles {
         this.player.revertMove(timeMod);
       }
 
+
       // Fire projectile if player is shooting.
-      if(Keyboard.keyPressed(Keyboard.KEY.SPACE)){
+      if(Keyboard.keyPressed(Keyboard.KEY.SPACE) && !this.pressed){
+        this.shotCount++;
+        this.pressed = true;
         const projectile = new Projectile();
         projectile.position = {
           x: this.player.position.x + (this.player.size.x / 2),
@@ -162,8 +169,19 @@ class SpaceBattles {
       }
     });
 
+    if(!Keyboard.keyPressed(Keyboard.KEY.SPACE) && this.pressed){
+        this.pressed = false;
+    }
+
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
+
+    
+    for(let i = 0; i < this.projectiles.length; i++){
+      if(this.projectiles[i].position.y < 0){
+        const index = this.projectiles[i];
+        this.projectiles.splice(index, 1);
+        shotCount--;
 
     for(let i = 0; i < this.projectiles.size; i++){
       if(this.projectiles[i].position.y > this.canvas.length){
