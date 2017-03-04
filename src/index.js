@@ -31,6 +31,9 @@ class SpaceBattles {
     // Load background
     this.background = new Image();
     this.background.src = 'assets/background/background.png';
+    this.background.onload = () => { this.background.hasLoaded = true; }
+    this.background.offset = 0;
+    this.background.direction = 1;
 
     // Setup entities
     this.entities = [];
@@ -123,6 +126,8 @@ class SpaceBattles {
    */
   update(timeMod) {
 
+    this.background.offset += timeMod * this.background.direction;
+
     this.entities.forEach((e) => {
 
       // Check for and resolve entity edge collions on X axis
@@ -166,9 +171,6 @@ class SpaceBattles {
         projectile.size = { x: 4, y: 12 };
         this.projectiles.push(projectile);
         this.sounds.fire.play();
-        if(this.boss.health > 5){
-          this.boss.health -= 5;
-        }
       }
     });
 
@@ -195,13 +197,27 @@ class SpaceBattles {
   render() {
 
     // Render Background
-    context.drawImage(
-      this.background,
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height
-    );
+    if(this.background.hasLoaded) {
+      this.context.drawImage(
+        this.background,
+        0,
+        this.background.offset * 10, // This needs to grow
+        this.background.width,
+        this.canvas.height,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      );
+    }
+
+    // When we run out of background to scroll, we need to restart
+    if(
+      ((this.background.offset * 10) + this.canvas.height > this.background.height) ||
+      this.background.offset < 0
+    ) {
+      this.background.direction = -(this.background.direction);
+    }
 
     // Render Entities
     this.entities.map(entity => entity.render(this.context));
