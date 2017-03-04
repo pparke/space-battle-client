@@ -31,9 +31,9 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
-    const player = new Player('../assets/ship.png');
-    player.size = { x: 32, y: 32 };
-    player.position = { x: this.canvas.width / 2, y: this.canvas.height - 48 }
+    const player = new Player('../assets/ship/ship2.png');
+    player.size = { x: 84, y: 84 };
+    player.position = { x: (this.canvas.width / 2) - (player.size.x / 2), y: this.canvas.height - 84 }
 
     const boss = new Boss();
     boss.size = { x: 128, y: 128 };
