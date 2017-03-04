@@ -1,4 +1,59 @@
 import io from 'socket.io-client';
+
+class SpaceBattles {
+
+  /**
+   * Game Setup
+   */
+  constructor() {
+
+    // Setup socket to stream image data from server.
+    const socket = io('http://localhost:3090');
+
+    // Grab canvas element from the dom to render to.
+    this.canvas = document.getElementById('gameCanvas');
+    this.context = this.canvas.getContext('2d');
+
+  }
+
+  /**
+   * Animate
+   */
+  animate() {
+    window.requestAnimationFrame(this.animate.bind(this));
+    this.look();
+  }
+
+  /**
+   * Game Loop
+   */
+  loop() {
+    let now = Date.now();
+    let timeMod = (now - this.lastFrameTime) / 1000;
+    this.update(timeMod);
+    this.render();
+    this.lastFrameTime = now;
+  }
+
+  /**
+   * Update
+   */
+  update() {
+
+  }
+
+  /**
+   * Render
+   */
+  render() {
+
+  }
+
+}
+
+const game = new SpaceBattles();
+
+
 const socket = io('http://localhost:3090');
 
 const canvas = document.getElementById('canvas-video');
@@ -27,9 +82,3 @@ socket.on('frame', (data) => {
   };
   img.src = 'data:image/png;base64,' + base64String;
 });
-
-function setup() {
-  let video = document.getElementById('video');
-  let canvas = document.getElementById('canvas-video');
-  let startbutton = document.getElementById('startbutton');
-}
