@@ -216,8 +216,9 @@ class SpaceBattles {
 
      if(this.boss.health == 0){
        this.projectiles = [];
-       alert("The Boss Is Dead")
-      window.location.reload();
+       if(confirm("The Boss Is Dead")){
+         window.location.reload();
+       }
      }
 
 
