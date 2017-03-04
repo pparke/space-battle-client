@@ -64,10 +64,10 @@ class SpaceBattles {
     this.animate();
     this.setupSocketListener(socket);
 
-    pressed = false;
-    shotCount = 0;
+    this.pressed = false;
+    this.shotCount = 0;
 
-  }
+}
 
   setupSocketListener(socket) {
     /**
@@ -150,7 +150,6 @@ class SpaceBattles {
         this.player.revertMove(timeMod);
       }
 
-
       // Fire projectile if player is shooting.
       if(Keyboard.keyPressed(Keyboard.KEY.SPACE) && !this.pressed){
         this.shotCount++;
@@ -181,14 +180,10 @@ class SpaceBattles {
       if(this.projectiles[i].position.y < 0){
         const index = this.projectiles[i];
         this.projectiles.splice(index, 1);
-        shotCount--;
-
-    for(let i = 0; i < this.projectiles.size; i++){
-      if(this.projectiles[i].position.y > this.canvas.length){
-        this.projectiles.remove(this.projectiles.indexof(pProjectile));
+        this.shotCount--;
       }
-    }
   }
+}
 
   /**
    * Render
