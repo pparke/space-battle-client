@@ -13,9 +13,12 @@ export default class Entity {
     this.speed = 250;
 
     this.decorations = [];
+    this.effects = [];
 
     this.update = this.update.bind(this);
     this.render = this.render.bind(this);
+    this.addEffect = this.addEffect.bind(this);
+    this.addDecoration = this.addDecoration.bind(this);
   }
 
   addDecoration(src, pos, size) {
@@ -29,6 +32,10 @@ export default class Entity {
     dec.size = size;
     dec.ready = false;
     this.decorations.push(dec);
+  }
+
+  addEffect(effect) {
+    this.effects.push(effect);
   }
 
   update(timeMod) {
@@ -55,6 +62,14 @@ export default class Entity {
           dec.size.x,
           dec.size.y
         );
+      }
+
+      for (const effect of this.effects) {
+        console.log('running effect', effect)
+        effect.run(context, this);
+      }
+      if (this.effects.length > 0) {
+        this.effects = this.effects.filter(e => !e.done);
       }
     }
     else {
