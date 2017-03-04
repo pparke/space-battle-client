@@ -12,8 +12,19 @@ export default class Entity {
     this.position = { x: 0, y: 0 };
     this.speed = 250;
 
+    this.decorations = [];
+
     this.update = this.update.bind(this);
     this.render = this.render.bind(this);
+  }
+
+  addDecoration(src) {
+    const dec = new Image();
+    dec.onload = () => {
+      dec.ready = true;
+    }
+    dec.src = src;
+    this.decorations.push(dec);
   }
 
   update(timeMod) {
@@ -29,6 +40,18 @@ export default class Entity {
         this.size.x,
         this.size.y
       );
+      for (const dec of this.decorations) {
+        if (!dec.ready) {
+          continue;
+        }
+        context.drawImage(
+          dec.img,
+          dec.pos.x,
+          dec.pos.y,
+          dec.size.x,
+          dec.size.y
+        );
+      }
     }
     else {
       context.beginPath();
