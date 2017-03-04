@@ -97,7 +97,7 @@ class SpaceBattles {
           this.player.position.x > e.position.x + e.size.x
         )
       ){
-        this.player.revertMove();
+        this.player.revertMove(timeMod);
       }
 
     });
