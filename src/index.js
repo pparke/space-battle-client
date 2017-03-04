@@ -16,7 +16,7 @@ class SpaceBattles {
   constructor() {
 
     // Listen for frame data from the server and handle it.
-    const socket = io('http://localhost:3090');
+    const socket = io('http://192.168.2.76:3090');
 
     this.handleSocketData = this.handleSocketData.bind(this);
     this.convertToB64 = this.convertToB64.bind(this);
@@ -231,7 +231,8 @@ class SpaceBattles {
      if(this.boss.health == 0){
        this.projectiles = [];
        if(confirm("The Boss Is Dead")){
-         window.location.reload();
+         this.boss.health = 100;
+         this.player.health = 100;
        }
      }
 
@@ -266,7 +267,8 @@ class SpaceBattles {
 
     if(this.player.health == 0){
       if (confirm("The Player Has Died")){
-        window.location.reload();
+        this.boss.health = 100;
+        this.player.health = 100;
        }
     }
     this.BossLastFramePos = this.boss.position.y;
