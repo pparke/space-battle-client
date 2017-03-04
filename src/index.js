@@ -1,5 +1,7 @@
 import io from 'socket.io-client';
 import InlineWorker from 'inline-worker';
+import Player from './player';
+import Boss from './boss';
 
 class SpaceBattles {
 
@@ -20,6 +22,11 @@ class SpaceBattles {
 
     // Set initial last frame time
     this.lastFrameTime = Date.now();
+
+    // Setup entities
+    this.entities = [];
+    this.entities.push(new Player());
+    this.entities.push(new Boss());
 
     // Start the game loop.
     this.animate();
@@ -49,7 +56,7 @@ class SpaceBattles {
    * Update
    */
   update(timeMod) {
-
+    this.entities.map(entity => entity.update(timeMod));
   }
 
   /**
