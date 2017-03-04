@@ -161,13 +161,12 @@ class SpaceBattles {
 
     this.entities.map(entity => entity.update(timeMod));
     this.projectiles.map(projectile => projectile.update(timeMod));
-    
+
     for(let i = 0; i < this.projectiles.size; i++){
       if(this.projectiles[i].position.y > this.canvas.length){
         this.projectiles.remove(this.projectiles.indexof(pProjectile));
       }
     }
-    console.log(this.projectiles.length);
   }
 
   /**
@@ -176,7 +175,7 @@ class SpaceBattles {
   render() {
     this.context.beginPath();
     this.context.rect(0, 0, this.canvas.width, this.canvas.height);
-    this.context.fillStyle = "blue";
+    this.context.fillStyle = "black";
     this.context.fill();
     this.entities.map(entity => entity.render(this.context));
     this.projectiles.map(projectile => projectile.render(this.context));
@@ -185,42 +184,3 @@ class SpaceBattles {
 }
 
 const game = new SpaceBattles();
-
-
-/*
-const socket = io('http://localhost:3090');
-
-const canvas = document.getElementById('canvas-video');
-const { width, height } = canvas;
-const ctx = canvas.getContext('2d');
-const img = new Image();
-
-// show loading notice
-ctx.fillStyle = '#333';
-ctx.fillText('Loading...', canvas.width / 2 - 30, canvas.height / 3);
-
-socket.on('frame', (data) => {
-  // Reference: http://    const self = {};
-    const worker = new InlineWorker(function(self){
-      const socket = io('http://localhost:3090');
-      socket.on('frame', (data) => {
-        postMessage(data);
-      });
-    });stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
-/*
-  const buf = new ArrayBuffer(width * height * 4);
-  const imgArr = new Uint8ClampedArray(buf);
-  const imgData = new ImageData(imgArr, width, height);
-  ctx.putImageData(imgData, 0, 0);
-*/
-/*
-  const uint8Arr = new Uint8ClampedArray(data.buffer);
-  const str = String.fromCharCode.apply(null, uint8Arr);
-  const base64String = btoa(str);
-
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = 'data:image/png;base64,' + base64String;
-});
-*/
