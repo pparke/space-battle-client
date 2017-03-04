@@ -1,7 +1,8 @@
 export default class Entity {
 
-  constructor(imgSource) {
+  constructor(imgSource, context) {
     this.sprite = new Image();
+    this.context = context;
 
     this.sprite.src = imgSource || '';
     this.sprite.onload = () => {
@@ -55,6 +56,10 @@ export default class Entity {
           dec.size.x,
           dec.size.y
         );
+      }
+
+      for (const effect of this.effects) {
+        effect(context);
       }
     }
     else {

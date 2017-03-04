@@ -34,11 +34,11 @@ class SpaceBattles {
     // Setup projectiles
     this.projectiles = [];
 
-    const player = new Player('../assets/ship/ship2.png');
+    const player = new Player('../assets/ship/ship2.png', this.context);
     player.size = { x: 84, y: 84 };
     player.position = { x: (this.canvas.width / 2) - (player.size.x / 2), y: this.canvas.height - 84 }
 
-    const boss = new Boss();
+    const boss = new Boss('', this.context);
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
     boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
@@ -146,6 +146,7 @@ class SpaceBattles {
 
       // Fire projectile if player is shooting.
       if(Keyboard.keyPressed(Keyboard.KEY.SPACE)){
+        this.player.flash()
         const projectile = new Projectile();
         projectile.position = {
           x: this.player.position.x + (this.player.size.x / 2),
