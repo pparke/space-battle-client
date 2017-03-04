@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import InlineWorker from 'inline-worker';
 import Player from './player';
 import Boss from './boss';
+import Keyboard from './keyboard';
 
 class SpaceBattles {
 
