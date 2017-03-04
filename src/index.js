@@ -65,11 +65,13 @@ class SpaceBattles {
   }
 
   handleSocketData(data) {
-    console.log('got data from server: ', data);
     const b64 = this.convertToB64(data.buffer);
     this.boss.updateImgSrc(b64);
     const { width, height } = this.canvas;
-    this.boss.updatePos(width - (data.position.x * width), data.position.y * height);
+    const xpos = width - (data.position.x * width);
+    console.log('y pos', data.position.y)
+    const ypos = data.position.y > this.boss.minHeight ? this.boss.minHeight * height : data.position.y * height;
+    this.boss.updatePos(xpos, ypos);
   }
 
   convertToB64(buf) {
