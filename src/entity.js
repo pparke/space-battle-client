@@ -60,7 +60,7 @@ export default class Entity {
     else {
       context.beginPath();
       context.rect(this.position.x, this.position.y, this.size.x, this.size.y);
-      context.fillStyle = "black";
+      context.fillStyle = "white";
       context.fill();
     }
   }
