@@ -230,8 +230,9 @@ class SpaceBattles {
 
      if(this.boss.health == 0){
        this.projectiles = [];
-       alert("The Boss Is Dead")
-      window.location.reload();
+       if(confirm("The Boss Is Dead")){
+         window.location.reload();
+       }
      }
 
 
@@ -275,7 +276,7 @@ class SpaceBattles {
     if(this.boss.health < 40 && !this.boss.angry) {
       this.boss.decorations = [];
       this.boss.angry = true;
-      boss.addDecoration('../assets/boss/boss_damaged.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
+      this.boss.addDecoration('../assets/boss/boss_damaged.png', { x: -25, y: -25 }, { x: this.boss.size.x+50, y: this.boss.size.y+50 });
     }
 }
 
