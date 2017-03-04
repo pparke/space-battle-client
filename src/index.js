@@ -10,9 +10,26 @@ class SpaceBattles {
     // Setup socket to stream image data from server.
     const socket = io('http://localhost:3090');
 
+    // Create web worker for reading data from server.
+    const worker = new Worker('./worker.js');
+
+    // When worker gives us new data, set it on game object.
+    worker.addEventListener('message', (e) => {
+      // TODO: have the worker do the parsing of the data
+      //       but we should be storing the data here so it
+      //       is accesible in update/render
+      console.log('GOT DATA FROM WORKER: ', e.data);
+    }, false);
+
     // Grab canvas element from the dom to render to.
     this.canvas = document.getElementById('gameCanvas');
     this.context = this.canvas.getContext('2d');
+
+    // Set initial last frame time
+    this.lastFrameTime = Date.now();
+
+    // Start the game loop.
+    this.animate();
 
   }
 
