@@ -57,7 +57,10 @@ export default class Player extends Entity {
   move(direction, timeMod) {
     this.position.x += this.speed * Math.cos(direction) * timeMod;
     this.position.y += this.speed * -Math.sin(direction) * timeMod;
+  }
 
+  revertMove() {
+    console.log('revertMove');
   }
 
 }

@@ -38,6 +38,8 @@ class SpaceBattles {
     this.entities.push(player);
     this.entities.push(boss);
 
+    this.player = player;
+
     // Start the game loop.
     this.animate();
 
@@ -67,31 +69,41 @@ class SpaceBattles {
    */
   update(timeMod) {
 
-    this.entities.forEach((entity) => {
+    this.entities.forEach((e) => {
 
       // Check for and resolve entity edge collions on X axis
-      if(entity.position.x < 0) {
-        console.log('COLLISION DETECHTION');
-        entity.position.x = 0;
+      if(e.position.x < 0) {
+        e.position.x = 0;
       }
-      else if(entity.position.x + entity.size.x > this.canvas.width) {
-        console.log('COLLISION DETECHTION');
-        entity.position.x = this.canvas.width - entity.size.x;
+      else if(e.position.x + e.size.x > this.canvas.width) {
+        e.position.x = this.canvas.width - e.size.x;
       }
 
       // Check for and resolve entity edge colliions on Y axis
-      if(entity.position.y < 0) {
-        console.log('COLLISION DETECHTION');
-        entity.position.y = 0;
+      if(e.position.y < 0) {
+        e.position.y = 0;
       }
-      else if (entity.position.y + entity.size.y > this.canvas.height) {
-        entity.position.y = this.canvas.height - entity.size.y;
+      else if (e.position.y + e.size.y > this.canvas.height) {
+        e.position.y = this.canvas.height - e.size.y;
       }
 
+      // Check for and resolve player on entity collisons
+      if(
+        !(e instanceof Player) &&
+        !(
+          this.player.position.y + this.player.size.y < e.position.y ||
+          this.player.position.y > e.position.y + e.size.y ||
+          this.player.position.x + this.player.size.x < e.position.x ||
+          this.player.position.x > e.position.x + e.size.x
+        )
+      ){
+        this.player.revertMove();
+      }
 
     });
 
     this.entities.map(entity => entity.update(timeMod));
+
   }
 
   /**
