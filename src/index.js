@@ -251,13 +251,12 @@ class SpaceBattles {
         this.bossShotCount--;
         console.log("Boss bullet CLEARED");
       }
-      else if (this.isColliding(this.player, this.bossProjectiles[i])){
-        this.bossProjectiles.splice(i, 1);
-        this.player.health -= 5;
+      else if (this.isLaserColliding(this.player, this.bossProjectiles[i])){
+        this.player.health -= 1;
         this.bossShotCount--;
         console.log("Player Hit");
       }
-      
+
       if (this.bossProjectiles[i] && this.bossProjectiles[i].dead) {
         const index = this.bossProjectiles[i];
         this.bossProjectiles.splice(index, 1);
@@ -294,6 +293,14 @@ isColliding(entityHit, projectile){
             }
 }
 
+isLaserColliding(entity, laser) {
+  return !(
+    entity.position.y + entity.size.y < laser.position.y ||
+    entity.position.y > laser.position.y + laser.size.y ||
+    entity.position.x + entity.size.x < laser.position.x ||
+    entity.position.x > laser.position.x + laser.size.x
+  )
+}
 
   /**
    * Render
