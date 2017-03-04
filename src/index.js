@@ -26,8 +26,17 @@ class SpaceBattles {
 
     // Setup entities
     this.entities = [];
-    this.entities.push(new Player());
-    this.entities.push(new Boss());
+
+    const player = new Player();
+    player.size = { x: 32, y: 32 };
+    player.position = { x: this.canvas.width / 2, y: this.canvas.height - 48 }
+
+    const boss = new Boss();
+    boss.size = { x: 128, y: 128 };
+    boss.position = { x: this.canvas.width / 2, y: 42 }
+
+    this.entities.push(player);
+    this.entities.push(boss);
 
     // Start the game loop.
     this.animate();
@@ -64,6 +73,10 @@ class SpaceBattles {
    * Render
    */
   render() {
+    this.context.beginPath();
+    this.context.rect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = "blue";
+    this.context.fill();
     this.entities.map(entity => entity.render(this.context));
   }
 
