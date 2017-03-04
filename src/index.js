@@ -58,7 +58,7 @@ class SpaceBattles {
     boss.size = { x: 128, y: 128 };
     boss.position = { x: this.canvas.width / 2, y: 42 };
     boss.angry = false;
-    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: boss.size.x+50, y: boss.size.y+50 });
+    boss.addDecoration('../assets/boss/boss.png', { x: -25, y: -25 }, { x: this.boss.size.x+50, y: this.boss.size.y+50 });
     this.boss = boss;
 
     this.entities.push(player);
@@ -223,7 +223,7 @@ class SpaceBattles {
 
      //boss is lasering
      if(this.BossLastFramePos - this.BossCurrentFramePos > 10){
-        
+
      }
     //boss
     //  if(){
