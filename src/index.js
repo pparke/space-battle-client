@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import Player from './player';
 import Boss from './boss';
 import Keyboard from './keyboard';
+import Projectile from './projectile';
 
 class SpaceBattles {
 
@@ -29,7 +30,10 @@ class SpaceBattles {
     // Setup entities
     this.entities = [];
 
-    const player = new Player();
+    // Setup projectiles
+    this.projectiles = [];
+
+    const player = new Player('../assets/ship.png');
     player.size = { x: 32, y: 32 };
     player.position = { x: this.canvas.width / 2, y: this.canvas.height - 48 }
 
@@ -41,6 +45,8 @@ class SpaceBattles {
 
     this.entities.push(player);
     this.entities.push(boss);
+
+    this.player = player;
 
     // Start the game loop.
     this.animate();
@@ -62,6 +68,7 @@ class SpaceBattles {
     console.log('got data from server: ', data);
     const b64 = this.convertToB64(data.buffer);
     this.boss.updateImgSrc(b64);
+    this.boss.updatePos(data.position);
   }
 
   convertToB64(buf) {
@@ -94,30 +101,52 @@ class SpaceBattles {
    */
   update(timeMod) {
 
-    this.entities.forEach((entity) => {
+    this.entities.forEach((e) => {
 
       // Check for and resolve entity edge collions on X axis
-      if(entity.position.x < 0) {
-        console.log('COLLISION DETECHTION');
-        entity.position.x = 0;
+      if(e.position.x < 0) {
+        e.position.x = 0;
       }
-      else if(entity.position.x + entity.size.x > this.canvas.width) {
-        console.log('COLLISION DETECHTION');
-        entity.position.x = this.canvas.width - entity.size.x;
+      else if(e.position.x + e.size.x > this.canvas.width) {
+        e.position.x = this.canvas.width - e.size.x;
       }
 
       // Check for and resolve entity edge colliions on Y axis
-      if(entity.position.y < 0) {
-        console.log('COLLISION DETECHTION');
-        entity.position.y = 0;
+      if(e.position.y < 0) {
+        e.position.y = 0;
       }
-      else if (entity.position.y + entity.size.y > this.canvas.height) {
-        entity.position.y = this.canvas.height - entity.size.y;
+      else if (e.position.y + e.size.y > this.canvas.height) {
+        e.position.y = this.canvas.height - e.size.y;
       }
 
+      // Check for and resolve player on entity collisons
+      if(
+        !(e instanceof Player) &&
+        !(
+          this.player.position.y + this.player.size.y < e.position.y ||
+          this.player.position.y > e.position.y + e.size.y ||
+          this.player.position.x + this.player.size.x < e.position.x ||
+          this.player.position.x > e.position.x + e.size.x
+        )
+      ){
+        this.player.revertMove(timeMod);
+      }
+
+      // Fire projectile if player is shooting.
+      if(Keyboard.keyPressed(Keyboard.KEY.SPACE)){
+        const projectile = new Projectile();
+        projectile.position = {
+          x: this.player.position.x + (this.player.size.x / 2),
+          y: this.player.position.y - 12
+        }
+        projectile.size = { x: 4, y: 12 };
+        this.projectiles.push(projectile);
+      }
     });
 
     this.entities.map(entity => entity.update(timeMod));
+    this.projectiles.map(projectile => projectile.update(timeMod));
+
   }
 
   /**
@@ -129,6 +158,7 @@ class SpaceBattles {
     this.context.fillStyle = "blue";
     this.context.fill();
     this.entities.map(entity => entity.render(this.context));
+    this.projectiles.map(projectile => projectile.render(this.context));
   }
 
 }

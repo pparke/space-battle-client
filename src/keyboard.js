@@ -14,7 +14,8 @@ let Keyboard = {
     LEFT:     65,
     RIGHT:    68,
     ZOOMIN:   187,
-    ZOOMOUT:  189
+    ZOOMOUT:  189,
+    SPACE:    32
   },
 
   /**
