@@ -1,6 +1,6 @@
 import Entity from './entity';
 import Keyboard from './keyboard';
-
+import Projectile from './projectile';
 export default class Player extends Entity {
 
   constructor() {
@@ -64,5 +64,4 @@ export default class Player extends Entity {
     this.position.x -= this.speed * Math.cos(this.lastMoveDirection) * timeMod;
     this.position.y -= this.speed * -Math.sin(this.lastMoveDirection) * timeMod;
   }
-
 }
