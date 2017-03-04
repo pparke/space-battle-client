@@ -8,10 +8,10 @@ class SpaceBattles {
    */
   constructor() {
 
-    const self = {};
-    const worker = new InlineWorker(function(self){
-      // Web worker server socket logic here.
-      postMessage(/** Data from server **/);
+    // Listen for frame data from the server and handle it.
+    const socket = io('http://localhost:3090');
+    socket.on('frame', (data) => {
+      console.log('got data from server: ', data);
     });
 
     // Grab canvas element from the dom to render to.
@@ -77,7 +77,13 @@ ctx.fillStyle = '#333';
 ctx.fillText('Loading...', canvas.width / 2 - 30, canvas.height / 3);
 
 socket.on('frame', (data) => {
-  // Reference: http://stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
+  // Reference: http://    const self = {};
+    const worker = new InlineWorker(function(self){
+      const socket = io('http://localhost:3090');
+      socket.on('frame', (data) => {
+        postMessage(data);
+      });
+    });stackoverflow.com/questions/24107378/socket-io-began-to-support-binary-stream-from-1-0-is-there-a-complete-example-e/24124966#24124966
 /*
   const buf = new ArrayBuffer(width * height * 4);
   const imgArr = new Uint8ClampedArray(buf);
