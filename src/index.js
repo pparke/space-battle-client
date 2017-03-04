@@ -84,7 +84,6 @@ class SpaceBattles {
     this.BossBoundaryY1;
     this.BossBoundaryX2;
     this.BossBoundaryY2;
-    
 
     this.BossLaserActive = false;
 }
@@ -230,10 +229,8 @@ class SpaceBattles {
         BossBoundaryY = 0;
         //save boss pos x/y
      }
-    
     //boss
     //  if(){
-       
     //  }
 
     for(let i = 0; i < this.bossProjectiles.length; i++){
@@ -264,7 +261,8 @@ isColliding(entityHit, projectile){
        && projectile.position.y <= entityHit.position.y + entityHit.size.y
        && projectile.position.x >= entityHit.position.x
        && projectile.position.x <= entityHit.position.x + entityHit.size.x ){
-              return true;  
+             
+              return true;
             }
             else{
               return false
